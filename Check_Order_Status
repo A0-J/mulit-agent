@@ -34,7 +34,7 @@ workflow:
                 - comparison_operator: <
                   value: '10'
                   variable_selector: ['1742541310094', order_id]
-          title: Payment_Condition # (기존: 条件分支)
+          title: Payment_Condition
           type: if-else
         id: '1742541333879'
         position: {x: 384, y: 282}
