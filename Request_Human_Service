@@ -1,0 +1,65 @@
+app:
+  description: 'Sub-workflow to provide a link for human representative assistance.'
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: Request_Human_Service
+  use_icon_as_answer_icon: false
+
+kind: app
+version: 0.1.5
+
+workflow:
+  graph:
+    nodes:
+      # 1. 시작 노드 (Start)
+      - data:
+          title: Start_Node
+          type: start
+          variables: []
+        id: '1742547638921'
+        position:
+          x: 80
+          y: 282
+        width: 244
+
+      # 2. 메시지 템플릿 변환 (Template Transform)
+      # 상담원 연결을 위한 안내 문구와 링크를 생성합니다.
+      - data:
+          template: "Hello, please click the link for human assistance: https://www.a.com" 
+          title: Service_Link_Template
+          type: template-transform
+          variables: []
+        id: '1742547647415'
+        position:
+          x: 384
+          y: 282
+        width: 244
+
+      # 3. 종료 노드 (End)
+      # 최종 생성된 메시지를 출력하며 워크플로우를 마칩니다.
+      - data:
+          outputs:
+            - value_selector: ['1742547647415', output]
+              variable: output
+          title: End_Node
+          type: end
+        id: '1742547641743'
+        position:
+          x: 684
+          y: 282
+        width: 244
+
+    edges:
+      - id: Start_to_Template
+        source: '1742547638921'
+        target: '1742547647415'
+        sourceHandle: source
+        targetHandle: target
+        type: custom
+      - id: Template_to_End
+        source: '1742547647415'
+        target: '1742547641743'
+        sourceHandle: source
+        targetHandle: target
+        type: custom
