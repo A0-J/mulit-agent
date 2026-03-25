@@ -1,0 +1,89 @@
+app:
+  description: 'Sub-workflow to check the payment status of a user order.'
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: Check_Order_Status
+  use_icon_as_answer_icon: false
+
+kind: app
+version: 0.1.5
+
+workflow:
+  graph:
+    nodes:
+      # 1. 시작 노드: order_id 변수를 입력받음
+      - data:
+          title: Start_Node
+          type: start
+          variables:
+            - label: Order ID
+              required: true
+              type: number
+              variable: order_id
+        id: '1742541310094'
+        position: {x: 80, y: 282}
+        width: 244
+
+      # 2. 조건 분기 (Condition Branch)
+      # order_id가 10 미만인지 확인합니다.
+      - data:
+          cases:
+            - case_id: 'true'
+              conditions:
+                - comparison_operator: <
+                  value: '10'
+                  variable_selector: ['1742541310094', order_id]
+          title: Payment_Condition # (기존: 条件分支)
+          type: if-else
+        id: '1742541333879'
+        position: {x: 384, y: 282}
+        width: 244
+
+      # 3-1. 결제 실패 템플릿 (order_id < 10)
+      - data:
+          template: 'Order {{ order_id }}: Payment Failed'
+          title: Failure_Template
+          type: template-transform
+          variables:
+            - value_selector: ['1742541310094', order_id]
+              variable: order_id
+        id: '1742541359778'
+        position: {x: 688, y: 282}
+        width: 244
+
+      # 3-2. 결제 성공 템플릿 (그 외)
+      - data:
+          template: 'Order {{ order_id }}: Payment Successful'
+          title: Success_Template
+          type: template-transform
+          variables:
+            - value_selector: ['1742541310094', order_id]
+              variable: order_id
+        id: '1742541406189'
+        position: {x: 688, y: 434}
+        width: 244
+
+      # 4. 결과 취합 (Variable Aggregator)
+      # 두 분기 중 발생한 결과를 하나로 모읍니다.
+      - data:
+          output_type: string
+          title: Result_Aggregator
+          type: variable-aggregator
+          variables:
+            - ['1742541359778', output]
+            - ['1742541406189', output]
+        id: '1742541442313'
+        position: {x: 1053, y: 297}
+        width: 244
+
+      # 5. 종료 노드: 최종 결과 반환
+      - data:
+          outputs:
+            - value_selector: ['1742541442313', output]
+              variable: output
+          title: End_Node
+          type: end
+        id: '1742541456846'
+        position: {x: 1357, y: 297}
+        width: 244
